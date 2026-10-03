@@ -1,10 +1,5 @@
-import { fixedColumnIds, metadata } from "@shared/metadata"
-import { typeSafeObjectEntries, typeSafeObjectFromEntries } from "@shared/type.util"
 import type { PrimitiveAtom } from "jotai"
-import { atom } from "jotai"
 import type { FixedColumnID, PrimitiveMetadata, SourceID } from "@shared/types"
-import { verifyPrimitiveMetadata } from "@shared/verify"
-import { sources } from "@shared/sources"
 import type { Update } from "./types"
 
 function createPrimitiveMetadataAtom(
@@ -49,9 +44,7 @@ export function preprocessMetadata(target: PrimitiveMetadata) {
           .filter(([id]) => initialMetadata[id])
           .map(([id, s]) => {
             if (id === "focus") return [id, s.filter(k => sources[k]).map(k => sources[k].redirect ?? k)]
-            const oldS = s.filter(k => initialMetadata[id].includes(k)).map(k => sources[k].redirect ?? k)
-            const newS = initialMetadata[id].filter(k => !oldS.includes(k))
-            return [id, [...oldS, ...newS]]
+            return [id, initialMetadata[id]]
           }),
       ),
     },
